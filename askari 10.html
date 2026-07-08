@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Askari 10 — Society Safety &amp; Complaint Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --white:#ffffff;
+    --paper:#F4F7FB;
+    --panel:#FFFFFF;
+    --line:#E2E8F0;
+    --ink:#0B1220;
+    --ink-soft:#3B4457;
+    --blue:#1D4ED8;
+    --blue-deep:#12308F;
+    --blue-pale:#EAF0FE;
+    --red:#DC2626;
+    --red-pale:#FDECEC;
+    --amber:#B45309;
+    --amber-pale:#FEF3E2;
+    --green:#15803D;
+    --green-pale:#E9F7EF;
+    --radius:12px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+
+  /* ---- layout shell ---- */
+  .app{max-width:1180px;margin:0 auto;padding:0 20px;}
+
+  header.topbar{
+    background:var(--ink);
+    color:#fff;
+    border-bottom:3px solid var(--blue);
+  }
+  .topbar-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 0;flex-wrap:wrap;gap:12px;
+  }
+  .brand-block{display:flex;align-items:center;gap:10px;}
+  .brand-mark{
+    width:34px;height:34px;border-radius:8px;
+    background:var(--blue);
+    display:flex;align-items:center;justify-content:center;
+    position:relative;flex-shrink:0;
+  }
+  .brand-mark svg{width:18px;height:18px;}
+  .brand-text{display:flex;flex-direction:column;line-height:1.1;}
+  .brand-text .name{font-weight:800;font-size:17px;letter-spacing:.2px;}
+  .brand-text .tag{font-size:10.5px;color:#9FB2E0;font-weight:500;letter-spacing:.4px;text-transform:uppercase;}
+
+  nav.tabs{display:flex;gap:4px;flex-wrap:wrap;}
+  nav.tabs button{
+    background:transparent;border:none;color:#C7D2E8;
+    font-family:'Inter',sans-serif;font-weight:600;font-size:13.5px;
+    padding:8px 13px;border-radius:8px;cursor:pointer;
+    transition:background .15s,color .15s;
+  }
+  nav.tabs button:hover{background:rgba(255,255,255,.08);color:#fff;}
+  nav.tabs button.active{background:var(--blue);color:#fff;}
+
+  .role-toggle{
+    display:flex;align-items:center;gap:8px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.15);
+    padding:5px 6px;border-radius:999px;font-size:12px;
+  }
+  .role-toggle button{
+    border:none;padding:5px 12px;border-radius:999px;cursor:pointer;
+    font-family:'Inter',sans-serif;font-weight:700;font-size:11.5px;
+    background:transparent;color:#9FB2E0;letter-spacing:.3px;
+  }
+  .role-toggle button.on{background:#fff;color:var(--ink);}
+
+  /* dashed road-divider signature element */
+  .lane-divider{
+    height:0;border-top:3px dashed var(--line);
+    margin:28px 0;position:relative;
+  }
+  .lane-divider.tight{margin:18px 0;}
+
+  main{padding:26px 0 70px;}
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .hero{
+    background:linear-gradient(135deg,var(--blue-deep),var(--blue) 120%);
+    color:#fff;border-radius:16px;padding:30px 28px;
+    display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;
+    margin-bottom:22px;
+  }
+  .hero h1{font-size:26px;margin:0 0 8px;font-weight:800;}
+  .hero p{margin:0;color:#D7E1FB;font-size:14.5px;max-width:480px;}
+  .hero-actions{display:flex;gap:10px;flex-wrap:wrap;}
+  .btn{
+    display:inline-flex;align-items:center;gap:7px;
+    font-family:'Inter',sans-serif;font-weight:700;font-size:13.5px;
+    padding:10px 16px;border-radius:9px;border:none;cursor:pointer;
+    transition:transform .1s, box-shadow .15s;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:#fff;color:var(--blue-deep);}
+  .btn-primary:hover{box-shadow:0 4px 14px rgba(0,0,0,.18);}
+  .btn-outline{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.6);}
+  .btn-solid{background:var(--blue);color:#fff;}
+  .btn-solid:hover{background:var(--blue-deep);}
+  .btn-danger{background:var(--red);color:#fff;}
+  .btn-ghost{background:var(--blue-pale);color:var(--blue-deep);}
+  .btn-sm{padding:6px 11px;font-size:12px;border-radius:7px;}
+
+  .stat-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;
+  }
+  .stat-card{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:16px 18px;
+  }
+  .stat-card .num{font-family:'Manrope',sans-serif;font-weight:800;font-size:26px;}
+  .stat-card .label{font-size:12px;color:var(--ink-soft);margin-top:2px;font-weight:600;}
+  .stat-card.urgent .num{color:var(--red);}
+  .stat-card.ok .num{color:var(--green);}
+  .stat-card.blue .num{color:var(--blue);}
+
+  .section-title{
+    display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;
+  }
+  .section-title h2{font-size:16.5px;margin:0;font-weight:800;}
+  .section-title .see-all{font-size:12.5px;color:var(--blue);font-weight:700;cursor:pointer;}
+
+  .grid-2col{display:grid;grid-template-columns:1.3fr 1fr;gap:20px;}
+
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+  }
+  .feed-item{
+    display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);
+  }
+  .feed-item:last-child{border-bottom:none;}
+  .feed-icon{
+    width:36px;height:36px;border-radius:9px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;font-size:16px;
+  }
+  .feed-icon.event{background:var(--blue-pale);}
+  .feed-icon.news{background:var(--amber-pale);}
+  .feed-item .ftitle{font-weight:700;font-size:13.5px;margin:0 0 3px;}
+  .feed-item .fmeta{font-size:11.5px;color:var(--ink-soft);}
+  .pin{background:var(--amber-pale);color:var(--amber);font-size:10px;font-weight:800;padding:2px 7px;border-radius:5px;margin-left:6px;letter-spacing:.3px;}
+
+  /* forms */
+  .form-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;}
+  label{display:block;font-size:12.5px;font-weight:700;color:var(--ink-soft);margin:14px 0 6px;}
+  label:first-child{margin-top:0;}
+  input[type=text],input[type=tel],input[type=datetime-local],select,textarea{
+    width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:9px;
+    font-family:'Inter',sans-serif;font-size:13.5px;background:#fff;color:var(--ink);
+  }
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--blue);outline-offset:1px;border-color:var(--blue);}
+  textarea{resize:vertical;min-height:70px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .checkline{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:13px;font-weight:600;color:var(--ink);}
+  .checkline input{width:16px;height:16px;}
+  .subfields{
+    border-left:3px solid var(--blue);background:var(--blue-pale);
+    padding:14px 16px;border-radius:0 10px 10px 0;margin-top:16px;
+  }
+  .subfields .tag{font-size:11px;font-weight:800;color:var(--blue-deep);text-transform:uppercase;letter-spacing:.4px;}
+  .file-input{
+    border:1.5px dashed var(--line);border-radius:9px;padding:14px;text-align:center;
+    font-size:12.5px;color:var(--ink-soft);background:#fafcff;
+  }
+  .file-input input{margin-top:8px;}
+  .form-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px;}
+
+  /* status badges */
+  .badge{font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px;letter-spacing:.2px;}
+  .badge.submitted{background:var(--blue-pale);color:var(--blue-deep);}
+  .badge.review{background:var(--amber-pale);color:var(--amber);}
+  .badge.action{background:#E9F0FF;color:var(--blue);}
+  .badge.resolved{background:var(--green-pale);color:var(--green);}
+  .badge.rejected{background:var(--red-pale);color:var(--red);}
+  .badge.urgent{background:var(--red);color:#fff;}
+  .badge.pending{background:var(--amber-pale);color:var(--amber);}
+  .badge.approved{background:var(--green-pale);color:var(--green);}
+
+  .progress-track{
+    display:flex;gap:4px;margin:10px 0 2px;
+  }
+  .progress-track span{flex:1;height:5px;border-radius:3px;background:var(--line);}
+  .progress-track span.done{background:var(--blue);}
+  .progress-track span.rejected-fill{background:var(--red);}
+
+  .complaint-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px;}
+  .complaint-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;}
+  .complaint-ref{font-size:11px;color:var(--ink-soft);}
+  .complaint-desc{font-size:13.5px;margin:8px 0 4px;color:var(--ink);}
+  .complaint-meta{font-size:11.5px;color:var(--ink-soft);display:flex;gap:14px;flex-wrap:wrap;margin-top:6px;}
+  .cctv-tag{
+    display:inline-flex;align-items:center;gap:5px;background:var(--ink);color:#fff;
+    font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:6px;margin-top:8px;
+  }
+
+  /* admin table */
+  table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  thead th{
+    text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;
+    color:var(--ink-soft);border-bottom:2px solid var(--line);padding:9px 8px;font-weight:800;
+  }
+  tbody td{padding:11px 8px;border-bottom:1px solid var(--line);vertical-align:middle;}
+  tbody tr:hover{background:#FAFBFF;}
+  select.status-select{padding:5px 8px;font-size:12px;border-radius:7px;}
+
+  .filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .filter-bar select, .filter-bar input{width:auto;min-width:140px;}
+
+  .toast{
+    position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;
+    padding:14px 18px;border-radius:10px;font-size:13px;font-weight:600;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);opacity:0;transform:translateY(10px);
+    transition:opacity .25s, transform .25s;pointer-events:none;z-index:50;
+    max-width:320px;
+  }
+  .toast.show{opacity:1;transform:translateY(0);}
+  .toast .ref{color:#8FB2FF;font-family:'JetBrains Mono',monospace;}
+
+  .bl-list{display:grid;gap:10px;}
+  .bl-row{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px 16px;flex-wrap:wrap;
+  }
+  .bl-name{font-weight:700;font-size:14px;}
+  .bl-phone{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink-soft);}
+  .bl-reason{font-size:12px;color:var(--red);font-weight:700;}
+  .bl-count{font-size:11px;color:var(--ink-soft);}
+
+  .empty-state{text-align:center;padding:40px 20px;color:var(--ink-soft);}
+  .empty-state .glyph{font-size:34px;margin-bottom:10px;}
+  .empty-state p{font-size:13px;max-width:340px;margin:0 auto;}
+
+  .hotspot-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;}
+  .hotspot-row:last-child{border-bottom:none;}
+  .hotspot-bar-bg{background:var(--line);border-radius:5px;height:7px;flex:1;margin:0 12px;}
+  .hotspot-bar-fill{background:var(--red);height:7px;border-radius:5px;}
+
+  .cat-icon{
+    width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    font-size:14px;flex-shrink:0;
+  }
+  .required-star{color:var(--red);}
+
+  footer{
+    background:var(--ink);color:#8FA0C8;text-align:center;padding:18px;font-size:11.5px;
+  }
+
+  @media(max-width:800px){
+    .stat-grid{grid-template-columns:repeat(2,1fr);}
+    .grid-2col{grid-template-columns:1fr;}
+    .field-row{grid-template-columns:1fr;}
+    nav.tabs{width:100%;order:3;}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="app topbar-inner">
+    <div class="brand-block">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L4 5.5V11C4 16 7.4 20.6 12 22C16.6 20.6 20 16 20 11V5.5L12 2Z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="name">Askari 10</span>
+        <span class="tag">Sector Safety Portal</span>
+      </div>
+    </div>
+    <nav class="tabs" id="tabNav">
+      <button data-view="home" class="active">Home</button>
+      <button data-view="report">Report an Issue</button>
+      <button data-view="myreports">My Reports</button>
+      <button data-view="blacklist">Blacklist Registry</button>
+      <button data-view="admin">Admin Portal</button>
+    </nav>
+    <div class="role-toggle">
+      <button id="roleResident" class="on">Resident</button>
+      <button id="roleAdmin">Admin</button>
+    </div>
+  </div>
+</header>
+
+<main class="app">
+
+  <!-- ============ HOME ============ -->
+  <section class="view active" id="view-home">
+    <div class="hero">
+      <div>
+        <h1>Report it. Track it. Get it fixed.</h1>
+        <p>Rash driving, utility faults, and illegal activity in the society — logged directly to the management committee, with a status you can actually check.</p>
+        <div class="hero-actions" style="margin-top:16px;">
+          <button class="btn btn-primary" onclick="goToReportWithCategory('Rash Driving')">🚗 Report Rash Driving</button>
+          <button class="btn btn-outline" onclick="switchView('blacklist')">Check Blacklist</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-grid" id="homeStats"></div>
+
+    <div class="grid-2col">
+      <div class="card">
+        <div class="section-title"><h2>Society Feed</h2><span class="see-all">Events &amp; News</span></div>
+        <div id="feedList"></div>
+      </div>
+      <div class="card">
+        <div class="section-title"><h2>Quick Report</h2></div>
+        <label>What's the issue?</label>
+        <select id="quickCategory">
+          <option>Rash Driving</option>
+          <option>Street Light Not Working</option>
+          <option>Water Supply Issue</option>
+          <option>Illegal Construction</option>
+          <option>Illegal Commercial Activity</option>
+          <option>Theft / Blacklist Concern</option>
+          <option>Noise Complaint</option>
+          <option>Parking Violation</option>
+          <option>Other</option>
+        </select>
+        <button class="btn btn-solid" style="width:100%;margin-top:14px;" onclick="quickReport()">Continue to Full Report →</button>
+        <div class="lane-divider tight"></div>
+        <p style="font-size:12px;color:var(--ink-soft);margin:0;">Every report gets a reference number and a visible status: Submitted → Under Review → Action Taken → Resolved.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ REPORT FORM ============ -->
+  <section class="view" id="view-report">
+    <div class="section-title"><h2 style="font-size:20px;">Submit a Report</h2></div>
+    <div class="form-card">
+      <form id="complaintForm">
+        <label>Category <span class="required-star">*</span></label>
+        <select id="f-category" required>
+          <option value="">Select category…</option>
+          <option>Rash Driving</option>
+          <option>Street Light Not Working</option>
+          <option>Water Supply Issue</option>
+          <option>Illegal Construction</option>
+          <option>Illegal Commercial Activity</option>
+          <option>Theft / Blacklist Concern</option>
+          <option>Noise Complaint</option>
+          <option>Parking Violation</option>
+          <option>Other</option>
+        </select>
+
+        <div class="field-row">
+          <div>
+            <label>Sector / Street <span class="required-star">*</span></label>
+            <select id="f-sector" required>
+              <option value="">Select location…</option>
+              <option>Main Boulevard</option>
+              <option>Sector A — Street 1</option>
+              <option>Sector A — Street 2</option>
+              <option>Sector B — Street 3</option>
+              <option>Sector B — Street 4 (near park)</option>
+              <option>Sector C — Street 5</option>
+              <option>Community Park Road</option>
+              <option>Main Gate Area</option>
+              <option>Other / Not sure</option>
+            </select>
+          </div>
+          <div>
+            <label>Date &amp; Time of Incident</label>
+            <input type="datetime-local" id="f-datetime">
+          </div>
+        </div>
+
+        <label>Description <span class="required-star">*</span></label>
+        <textarea id="f-description" placeholder="Describe what happened, as clearly as you can..." required></textarea>
+
+        <!-- RASH DRIVING SUBFIELDS -->
+        <div class="subfields" id="subfields-rash" style="display:none;">
+          <span class="tag">Rash Driving Details</span>
+          <div class="field-row">
+            <div>
+              <label>Vehicle Number Plate</label>
+              <input type="text" id="f-plate" placeholder="e.g. ABC-123 (if you caught it)">
+            </div>
+            <div>
+              <label>Vehicle Type</label>
+              <select id="f-vehicletype">
+                <option>Car</option>
+                <option>Motorbike</option>
+                <option>Rickshaw</option>
+                <option>Van</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row">
+            <div>
+              <label>Approx. Driver Age Group</label>
+              <select id="f-agegroup">
+                <option>Teen</option>
+                <option>Adult</option>
+                <option>Child</option>
+                <option>Unknown</option>
+              </select>
+            </div>
+            <div>
+              <label>Was anyone hurt?</label>
+              <select id="f-injury">
+                <option value="no">No</option>
+                <option value="yes">Yes — someone was hurt</option>
+              </select>
+            </div>
+          </div>
+          <div class="checkline">
+            <input type="checkbox" id="f-repeat">
+            <label style="margin:0;">I've seen this same vehicle/driver do this before</label>
+          </div>
+          <div class="checkline">
+            <input type="checkbox" id="f-cctv">
+            <label style="margin:0;">Request CCTV footage from the society control room for this time &amp; location</label>
+          </div>
+        </div>
+
+        <!-- ILLEGAL ACTIVITY SUBFIELDS -->
+        <div class="subfields" id="subfields-illegal" style="display:none;">
+          <span class="tag">Illegal Activity Details</span>
+          <div class="field-row">
+            <div>
+              <label>House / Plot Number</label>
+              <input type="text" id="f-house" placeholder="e.g. House 214, Street 5">
+            </div>
+            <div>
+              <label>Type of Activity</label>
+              <select id="f-activitytype">
+                <option>Dance Club / Private Party Venue</option>
+                <option>Unregistered Commercial Business</option>
+                <option>Illegal Construction / Encroachment</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <label>How long has this been going on?</label>
+          <input type="text" id="f-duration" placeholder="e.g. every weekend for the past month">
+        </div>
+
+        <!-- THEFT / BLACKLIST SUBFIELDS -->
+        <div class="subfields" id="subfields-theft" style="display:none;">
+          <span class="tag">Theft / Worker Concern</span>
+          <p style="font-size:12px;color:var(--ink-soft);margin:0 0 8px;">If this concerns a specific worker or staff member (domestic help, guard, vendor), you can also add them to the Blacklist Registry separately after submitting this report.</p>
+          <label>Name of person involved (if known)</label>
+          <input type="text" id="f-theftname" placeholder="Full name">
+          <label>Phone number (if known)</label>
+          <input type="tel" id="f-theftphone" placeholder="03XX-XXXXXXX">
+        </div>
+
+        <label>Photo / Video Evidence</label>
+        <div class="file-input">
+          📎 Attach a photo, video, or CCTV clip if you have one
+          <input type="file" id="f-file" accept="image/*,video/*">
+        </div>
+
+        <div class="checkline">
+          <input type="checkbox" id="f-anon">
+          <label style="margin:0;">Submit this report anonymously (your name is hidden from the admin's default view)</label>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" style="color:var(--blue);border-color:var(--blue);" onclick="switchView('home')">Cancel</button>
+          <button type="submit" class="btn btn-solid">Submit Report</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ MY REPORTS ============ -->
+  <section class="view" id="view-myreports">
+    <div class="section-title"><h2 style="font-size:20px;">My Reports</h2></div>
+    <div id="myReportsList"></div>
+  </section>
+
+  <!-- ============ BLACKLIST ============ -->
+  <section class="view" id="view-blacklist">
+    <div class="section-title"><h2 style="font-size:20px;">Blacklist Registry</h2></div>
+    <p style="font-size:13px;color:var(--ink-soft);margin-top:-8px;">Verified reports about workers, domestic staff, or vendors involved in theft or misconduct — reviewed by the committee before appearing here. Check before you hire.</p>
+
+    <div class="grid-2col" style="margin-top:18px;">
+      <div>
+        <div class="card">
+          <div class="section-title"><h2>Approved Entries</h2></div>
+          <input type="text" id="blSearch" placeholder="Search by name or phone number…" oninput="renderBlacklist()" style="margin-bottom:14px;">
+          <div class="bl-list" id="blacklistList"></div>
+        </div>
+      </div>
+      <div>
+        <div class="form-card">
+          <h2 style="font-size:15px;margin:0 0 14px;">Report Someone to the Registry</h2>
+          <form id="blacklistForm">
+            <label>Full Name <span class="required-star">*</span></label>
+            <input type="text" id="bl-name" placeholder="Full name of the person" required>
+            <label>Phone Number <span class="required-star">*</span></label>
+            <input type="tel" id="bl-phone" placeholder="03XX-XXXXXXX" required>
+            <label>CNIC Number <span class="required-star">*</span></label>
+            <input type="text" id="bl-cnic" placeholder="XXXXX-XXXXXXX-X" required>
+            <label>Category <span class="required-star">*</span></label>
+            <select id="bl-category" required>
+              <option>Theft</option>
+              <option>Fraud</option>
+              <option>Trespassing</option>
+              <option>Other Misconduct</option>
+            </select>
+            <label>What happened? <span class="required-star">*</span></label>
+            <textarea id="bl-reason" placeholder="Describe the incident clearly. This will be reviewed before it's made public." required></textarea>
+            <label>Evidence (optional)</label>
+            <div class="file-input">
+              📎 Attach photo or document
+              <input type="file" id="bl-file">
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-solid" style="width:100%;justify-content:center;">Submit for Review</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ADMIN PORTAL ============ -->
+  <section class="view" id="view-admin">
+    <div class="section-title"><h2 style="font-size:20px;">Admin Portal — Management Committee</h2></div>
+
+    <div class="stat-grid" id="adminStats"></div>
+
+    <div class="grid-2col">
+      <div class="card">
+        <div class="section-title"><h2>All Complaints</h2></div>
+        <div class="filter-bar">
+          <select id="filterCategory" onchange="renderAdminTable()">
+            <option value="">All Categories</option>
+          </select>
+          <select id="filterStatus" onchange="renderAdminTable()">
+            <option value="">All Statuses</option>
+            <option>Submitted</option>
+            <option>Under Review</option>
+            <option>Action Taken</option>
+            <option>Resolved</option>
+            <option>Rejected</option>
+          </select>
+          <select id="filterUrgent" onchange="renderAdminTable()">
+            <option value="">All Reports</option>
+            <option value="urgent">Urgent Only</option>
+          </select>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr><th>Ref</th><th>Category</th><th>Sector</th><th>Reporter</th><th>Status</th><th>Update</th></tr>
+            </thead>
+            <tbody id="adminTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="section-title"><h2>Rash Driving Hotspots</h2></div>
+          <div id="hotspotList"></div>
+        </div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="section-title"><h2>Vehicle Offender Tiers</h2></div>
+          <div id="offenderList"></div>
+        </div>
+        <div class="card">
+          <div class="section-title"><h2>Pending Blacklist Approvals</h2></div>
+          <div id="pendingBlacklist"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>Askari 10 — built for a safer, more accountable society. This is a working prototype; data resets on page reload.</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= DATA (in-memory only — no localStorage) ================= */
+let complaints = [
+  {ref:'RD-1042', category:'Rash Driving', sector:'Sector B — Street 4 (near park)', desc:'Silver Honda City sped past kids playing near the speed bump, didn\'t slow down at all.', plate:'LEA-2201', injury:'yes', anon:false, reporter:'Ayesha K. (House 88)', status:'Under Review', urgent:true, cctv:true, date:'2026-07-05 18:40'},
+  {ref:'RD-1039', category:'Rash Driving', sector:'Sector B — Street 4 (near park)', desc:'Same silver car again, overtaking on the wrong side.', plate:'LEA-2201', injury:'no', anon:false, reporter:'Bilal R. (House 41)', status:'Submitted', urgent:false, cctv:false, date:'2026-07-03 19:10'},
+  {ref:'UT-0917', category:'Street Light Not Working', sector:'Sector A — Street 2', desc:'Two poles dark since last week, very unsafe at night.', anon:false, reporter:'Sana M. (House 12)', status:'Action Taken', urgent:false, cctv:false, date:'2026-07-01 09:00'},
+  {ref:'IL-0442', category:'Illegal Commercial Activity', sector:'Sector C — Street 5', desc:'House 214 running a stitching business with daily walk-in customers, no commercial permit.', anon:true, reporter:'Anonymous — Sector C', status:'Submitted', urgent:false, cctv:false, date:'2026-06-29 14:20'},
+  {ref:'WT-0301', category:'Water Supply Issue', sector:'Main Gate Area', desc:'No water supply for 2 days on this street.', anon:false, reporter:'Committee Auto-Log', status:'Resolved', urgent:false, cctv:false, date:'2026-06-20 08:00'},
+];
+
+let blacklist = [
+  {name:'Ahmed Raza', phone:'0300-1234567', cnic:'35202-1234567-1', category:'Theft', reason:'Reported for petty theft while working as a domestic helper in Sector A.', status:'approved', count:2},
+  {name:'Imran Sheikh', phone:'0333-9988776', cnic:'35201-7654321-3', category:'Fraud', reason:'Took advance payment for repair work, never returned.', status:'approved', count:1},
+];
+
+let pendingBlacklist = [
+  {name:'Nasir Iqbal', phone:'0312-4455667', cnic:'35203-9988112-7', category:'Theft', reason:'Household items missing after hiring as part-time cleaner.', status:'pending'},
+];
+
+let feed = [
+  {type:'news', title:'Reminder: 3 rash-driving incidents reported on Street 4 this week', meta:'Posted by Committee · 2 days ago', pinned:true},
+  {type:'event', id:'EV-01', title:'Society Safety Meeting — Sat 7 PM, Community Hall', meta:'Posted by Committee · 4 days ago', pinned:false, rsvp_enabled:true, user_rsvp:null},
+  {type:'news', title:'New speed bumps being installed near the park, completion expected next week', meta:'Posted by Committee · 5 days ago', pinned:false},
+];
+
+/* vehicle plate -> offender profile, auto-escalating tier */
+let offenderProfiles = {};
+function normalizePlate(plate){
+  return (plate||'').replace(/[^a-zA-Z0-9]/g,'').toUpperCase();
+}
+function tierBadgeClass(tier){
+  return {'WARNING':'pending','FINE_ISSUED':'action','GATE_BAN':'urgent'}[tier] || 'pending';
+}
+
+let refCounter = 1043;
+let currentRole = 'resident';
+
+/* ================= CATEGORY ICON HELPER ================= */
+function catIcon(cat){
+  const map = {
+    'Rash Driving':'🚗','Street Light Not Working':'💡','Water Supply Issue':'💧',
+    'Illegal Construction':'🏗️','Illegal Commercial Activity':'🏠','Theft / Blacklist Concern':'🚨',
+    'Noise Complaint':'🔊','Parking Violation':'🅿️','Other':'📋'
+  };
+  return map[cat] || '📋';
+}
+function statusClass(s){
+  return {'Submitted':'submitted','Under Review':'review','Action Taken':'action','Resolved':'resolved','Rejected':'rejected'}[s] || 'submitted';
+}
+function statusStep(s){
+  return {'Submitted':1,'Under Review':2,'Action Taken':3,'Resolved':4,'Rejected':0}[s] || 1;
+}
+
+/* ================= TAB / VIEW SWITCHING ================= */
+document.getElementById('tabNav').addEventListener('click', e=>{
+  if(e.target.tagName === 'BUTTON'){ switchView(e.target.dataset.view); }
+});
+function switchView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  document.querySelectorAll('#tabNav button').forEach(b=>b.classList.toggle('active', b.dataset.view===name));
+  if(name==='home') renderHome();
+  if(name==='myreports') renderMyReports();
+  if(name==='blacklist') renderBlacklist();
+  if(name==='admin') renderAdminTable(true), renderHotspots(), renderOffenders(), renderPendingBlacklist(), renderAdminStats();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.getElementById('roleResident').addEventListener('click', ()=>setRole('resident'));
+document.getElementById('roleAdmin').addEventListener('click', ()=>setRole('admin'));
+function setRole(role){
+  currentRole = role;
+  document.getElementById('roleResident').classList.toggle('on', role==='resident');
+  document.getElementById('roleAdmin').classList.toggle('on', role==='admin');
+  if(role==='admin') switchView('admin');
+  else switchView('home');
+}
+
+function goToReportWithCategory(cat){
+  switchView('report');
+  document.getElementById('f-category').value = cat;
+  toggleSubfields();
+}
+function quickReport(){
+  const cat = document.getElementById('quickCategory').value;
+  goToReportWithCategory(cat);
+}
+
+/* ================= DYNAMIC FORM FIELDS ================= */
+document.getElementById('f-category').addEventListener('change', toggleSubfields);
+function toggleSubfields(){
+  const cat = document.getElementById('f-category').value;
+  document.getElementById('subfields-rash').style.display = (cat==='Rash Driving') ? 'block' : 'none';
+  document.getElementById('subfields-illegal').style.display = (cat==='Illegal Construction' || cat==='Illegal Commercial Activity') ? 'block' : 'none';
+  document.getElementById('subfields-theft').style.display = (cat==='Theft / Blacklist Concern') ? 'block' : 'none';
+}
+
+/* ================= FORM SUBMIT ================= */
+document.getElementById('complaintForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const cat = document.getElementById('f-category').value;
+  const sector = document.getElementById('f-sector').value;
+  const desc = document.getElementById('f-description').value;
+  const anon = document.getElementById('f-anon').checked;
+  const injury = cat==='Rash Driving' ? document.getElementById('f-injury').value : 'no';
+  const cctv = cat==='Rash Driving' ? document.getElementById('f-cctv').checked : false;
+  const plate = cat==='Rash Driving' ? document.getElementById('f-plate').value : '';
+  const file = document.getElementById('f-file').files[0];
+
+  const ref = (cat==='Rash Driving'?'RD-':cat.includes('Water')?'WT-':cat.includes('Light')?'UT-':cat.includes('Illegal')?'IL-':cat.includes('Theft')?'TH-':'GN-') + (refCounter++);
+
+  let offenderTier = null;
+  if(cat==='Rash Driving' && plate){
+    const key = normalizePlate(plate);
+    if(offenderProfiles[key]){
+      offenderProfiles[key].count += 1;
+      offenderProfiles[key].tier = offenderProfiles[key].count >= 3 ? 'GATE_BAN' : 'FINE_ISSUED';
+    } else {
+      offenderProfiles[key] = {vehicle: plate.toUpperCase(), count:1, tier:'WARNING'};
+    }
+    offenderTier = offenderProfiles[key].tier;
+  }
+
+  complaints.unshift({
+    ref, category:cat, sector, desc, plate,
+    anon, reporter: anon ? ('Anonymous — '+ (sector.split('—')[0]||sector).trim()) : 'You',
+    status:'Submitted', urgent: injury==='yes', cctv,
+    date: new Date().toISOString().slice(0,16).replace('T',' '),
+    evidence: file ? file.name : null,
+    offenderTier
+  });
+
+  showToast('Report received — reference ' + ref + '. You\'ll be notified as the committee reviews it.');
+  this.reset();
+  toggleSubfields();
+  switchView('myreports');
+});
+
+/* ================= BLACKLIST SUBMIT ================= */
+document.getElementById('blacklistForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const name = document.getElementById('bl-name').value;
+  const phone = document.getElementById('bl-phone').value;
+  const cnic = document.getElementById('bl-cnic').value;
+  const category = document.getElementById('bl-category').value;
+  const reason = document.getElementById('bl-reason').value;
+  pendingBlacklist.unshift({name, phone, cnic, category, reason, status:'pending'});
+  showToast('Submitted for committee review. It will appear in the public registry once approved.');
+  this.reset();
+  renderBlacklist();
+});
+
+/* ================= RENDER: HOME ================= */
+function renderHome(){
+  const openCount = complaints.filter(c=>c.status!=='Resolved' && c.status!=='Rejected').length;
+  const urgentCount = complaints.filter(c=>c.urgent).length;
+  const resolvedCount = complaints.filter(c=>c.status==='Resolved').length;
+  document.getElementById('homeStats').innerHTML = `
+    <div class="stat-card blue"><div class="num">${openCount}</div><div class="label">Open Reports</div></div>
+    <div class="stat-card urgent"><div class="num">${urgentCount}</div><div class="label">Urgent — Injury Reported</div></div>
+    <div class="stat-card ok"><div class="num">${resolvedCount}</div><div class="label">Resolved This Month</div></div>
+    <div class="stat-card"><div class="num">${blacklist.length}</div><div class="label">Blacklisted Workers</div></div>
+  `;
+  document.getElementById('feedList').innerHTML = feed.map(f=>`
+    <div class="feed-item">
+      <div class="feed-icon ${f.type}">${f.type==='event'?'📅':'📣'}</div>
+      <div style="flex:1;">
+        <p class="ftitle">${f.title}${f.pinned?'<span class="pin">PINNED</span>':''}</p>
+        <p class="fmeta">${f.meta}</p>
+        ${f.type==='event' && f.rsvp_enabled ? `
+          <div style="display:flex;gap:6px;margin-top:8px;">
+            <button class="btn btn-sm ${f.user_rsvp==='GOING'?'btn-solid':'btn-ghost'}" onclick="triggerRsvp('${f.id}','GOING')">Going</button>
+            <button class="btn btn-sm ${f.user_rsvp==='MAYBE'?'btn-solid':'btn-ghost'}" onclick="triggerRsvp('${f.id}','MAYBE')">Maybe</button>
+            <button class="btn btn-sm ${f.user_rsvp==='NOT_GOING'?'btn-solid':'btn-ghost'}" onclick="triggerRsvp('${f.id}','NOT_GOING')">Decline</button>
+          </div>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+function triggerRsvp(eventId, response){
+  const ev = feed.find(f=>f.id===eventId);
+  if(ev){ ev.user_rsvp = response; renderHome(); showToast('RSVP saved: ' + response.replace('_',' ').toLowerCase()); }
+}
+
+/* ================= RENDER: MY REPORTS ================= */
+function renderMyReports(){
+  const mine = complaints.filter(c=>c.reporter==='You' || c.reporter.startsWith('Anonymous'));
+  const el = document.getElementById('myReportsList');
+  if(mine.length===0){
+    el.innerHTML = `<div class="empty-state"><div class="glyph">📭</div><p>No reports yet. If something's wrong in the society, this is the fastest way to get it fixed.</p></div>`;
+    return;
+  }
+  el.innerHTML = mine.map(c=>{
+    const step = statusStep(c.status);
+    return `
+    <div class="complaint-card">
+      <div class="complaint-top">
+        <div>
+          <span class="cat-icon" style="background:var(--blue-pale);">${catIcon(c.category)}</span>
+        </div>
+        <div style="flex:1;">
+          <div class="complaint-top" style="align-items:center;">
+            <strong style="font-size:13.5px;">${c.category}</strong>
+            <span class="badge ${statusClass(c.status)}">${c.status}</span>
+          </div>
+          <p class="complaint-ref mono">Ref# ${c.ref}</p>
+          <p class="complaint-desc">${c.desc}</p>
+          <div class="complaint-meta">
+            <span>📍 ${c.sector}</span>
+            <span>🕒 ${c.date}</span>
+            ${c.urgent?'<span class="badge urgent">URGENT</span>':''}
+          </div>
+          ${c.cctv?'<div class="cctv-tag">🎥 CCTV footage requested</div>':''}
+          ${c.offenderTier?`<div class="cctv-tag" style="background:${c.offenderTier==='GATE_BAN'?'var(--red)':'var(--blue)'};">🚫 Vehicle tier: ${c.offenderTier.replace('_',' ')}</div>`:''}
+          <div class="progress-track">
+            ${[1,2,3,4].map(i=>`<span class="${c.status==='Rejected' ? 'rejected-fill' : (i<=step?'done':'')}"></span>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ================= RENDER: BLACKLIST ================= */
+function renderBlacklist(){
+  const q = (document.getElementById('blSearch')?.value || '').toLowerCase();
+  const filtered = blacklist.filter(b => b.name.toLowerCase().includes(q) || b.phone.includes(q));
+  const el = document.getElementById('blacklistList');
+  if(filtered.length===0){
+    el.innerHTML = `<div class="empty-state"><div class="glyph">🔍</div><p>No matching entries.</p></div>`;
+    return;
+  }
+  el.innerHTML = filtered.map(b=>`
+    <div class="bl-row">
+      <div>
+        <div class="bl-name">${b.name}</div>
+        <div class="bl-phone">${b.phone}</div>
+        <div class="bl-phone">CNIC: ${b.cnic || '—'}</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="bl-reason">${b.category}</div>
+        <div class="bl-count">${b.count} report${b.count>1?'s':''}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ================= RENDER: ADMIN TABLE ================= */
+function populateCategoryFilter(){
+  const cats = [...new Set(complaints.map(c=>c.category))];
+  const sel = document.getElementById('filterCategory');
+  sel.innerHTML = '<option value="">All Categories</option>' + cats.map(c=>`<option>${c}</option>`).join('');
+}
+function renderAdminTable(initial){
+  if(initial) populateCategoryFilter();
+  const fc = document.getElementById('filterCategory').value;
+  const fs = document.getElementById('filterStatus').value;
+  const fu = document.getElementById('filterUrgent').value;
+  let rows = complaints.filter(c =>
+    (!fc || c.category===fc) && (!fs || c.status===fs) && (!fu || c.urgent)
+  );
+  const body = document.getElementById('adminTableBody');
+  if(rows.length===0){
+    body.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--ink-soft);">No complaints match this filter.</td></tr>`;
+    return;
+  }
+  body.innerHTML = rows.map((c,idx)=>{
+    const realIdx = complaints.indexOf(c);
+    return `
+    <tr>
+      <td class="mono">${c.ref}${c.urgent?' <span class="badge urgent" style="margin-left:4px;">!</span>':''}</td>
+      <td>${catIcon(c.category)} ${c.category}</td>
+      <td>${c.sector}</td>
+      <td>${c.reporter}</td>
+      <td><span class="badge ${statusClass(c.status)}">${c.status}</span></td>
+      <td>
+        <select class="status-select" onchange="updateStatus(${realIdx}, this.value)">
+          ${['Submitted','Under Review','Action Taken','Resolved','Rejected'].map(s=>`<option ${s===c.status?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </td>
+    </tr>`;
+  }).join('');
+}
+function updateStatus(idx, newStatus){
+  complaints[idx].status = newStatus;
+  showToast(complaints[idx].ref + ' updated to "' + newStatus + '"');
+  renderAdminTable();
+  renderAdminStats();
+}
+
+/* ================= RENDER: ADMIN STATS ================= */
+function renderAdminStats(){
+  const total = complaints.length;
+  const open = complaints.filter(c=>c.status!=='Resolved' && c.status!=='Rejected').length;
+  const urgent = complaints.filter(c=>c.urgent).length;
+  const avgDays = 2; // demo static
+  document.getElementById('adminStats').innerHTML = `
+    <div class="stat-card blue"><div class="num">${total}</div><div class="label">Total Reports</div></div>
+    <div class="stat-card"><div class="num">${open}</div><div class="label">Open</div></div>
+    <div class="stat-card urgent"><div class="num">${urgent}</div><div class="label">Urgent</div></div>
+    <div class="stat-card ok"><div class="num">${avgDays}d</div><div class="label">Avg. Resolution Time</div></div>
+  `;
+}
+
+/* ================= RENDER: HOTSPOTS ================= */
+function renderHotspots(){
+  const counts = {};
+  complaints.filter(c=>c.category==='Rash Driving').forEach(c=>{
+    counts[c.sector] = (counts[c.sector]||0)+1;
+  });
+  const entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const max = entries.length ? entries[0][1] : 1;
+  const el = document.getElementById('hotspotList');
+  if(entries.length===0){
+    el.innerHTML = `<p style="font-size:12.5px;color:var(--ink-soft);">No rash driving reports logged yet.</p>`;
+    return;
+  }
+  el.innerHTML = entries.map(([sector,count])=>`
+    <div class="hotspot-row">
+      <span>${sector}</span>
+      <div class="hotspot-bar-bg"><div class="hotspot-bar-fill" style="width:${(count/max)*100}%;"></div></div>
+      <span class="mono">${count}</span>
+    </div>
+  `).join('');
+}
+
+/* ================= RENDER: OFFENDER TIERS ================= */
+function renderOffenders(){
+  const el = document.getElementById('offenderList');
+  const entries = Object.values(offenderProfiles).sort((a,b)=>b.count-a.count);
+  if(entries.length===0){
+    el.innerHTML = `<p style="font-size:12.5px;color:var(--ink-soft);">No repeat vehicles tracked yet — profiles build automatically as matching plates are reported.</p>`;
+    return;
+  }
+  el.innerHTML = entries.map(o=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;background:var(--ink);color:#fff;padding:10px 14px;border-radius:10px;margin-bottom:8px;">
+      <div>
+        <div class="mono" style="font-weight:700;font-size:13px;">${o.vehicle}</div>
+        <div style="font-size:11px;color:#9FB2E0;">${o.count} report${o.count>1?'s':''} logged</div>
+      </div>
+      <span class="badge ${tierBadgeClass(o.tier)}">${o.tier.replace('_',' ')}</span>
+    </div>
+  `).join('');
+}
+
+/* ================= RENDER: PENDING BLACKLIST ================= */
+function renderPendingBlacklist(){
+  const el = document.getElementById('pendingBlacklist');
+  if(pendingBlacklist.length===0){
+    el.innerHTML = `<p style="font-size:12.5px;color:var(--ink-soft);">No pending submissions.</p>`;
+    return;
+  }
+  el.innerHTML = pendingBlacklist.map((b,idx)=>`
+    <div class="bl-row" style="flex-direction:column;align-items:flex-start;">
+      <div style="display:flex;justify-content:space-between;width:100%;">
+        <div>
+          <div class="bl-name">${b.name}</div>
+          <div class="bl-phone">${b.phone}</div>
+          <div class="bl-phone">CNIC: ${b.cnic || '—'}</div>
+        </div>
+        <span class="badge pending">PENDING</span>
+      </div>
+      <p style="font-size:12px;color:var(--ink-soft);margin:8px 0;">${b.reason}</p>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-solid btn-sm" onclick="approveBlacklist(${idx})">Approve</button>
+        <button class="btn btn-outline btn-sm" style="color:var(--red);border-color:var(--red);" onclick="rejectBlacklist(${idx})">Reject</button>
+      </div>
+    </div>
+  `).join('');
+}
+function approveBlacklist(idx){
+  const entry = pendingBlacklist[idx];
+  blacklist.unshift({name:entry.name, phone:entry.phone, cnic:entry.cnic, category:entry.category, reason:entry.reason, status:'approved', count:1});
+  pendingBlacklist.splice(idx,1);
+  showToast(entry.name + ' added to the public Blacklist Registry.');
+  renderPendingBlacklist();
+  renderBlacklist();
+}
+function rejectBlacklist(idx){
+  const entry = pendingBlacklist[idx];
+  pendingBlacklist.splice(idx,1);
+  showToast('Submission for ' + entry.name + ' rejected.');
+  renderPendingBlacklist();
+}
+
+/* ================= TOAST ================= */
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 3800);
+}
+
+/* ================= INIT ================= */
+renderHome();
+</script>
+
+</body>
+</html>
