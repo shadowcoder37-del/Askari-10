@@ -996,3 +996,824 @@ renderHome();
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Askari-10 | Security Blacklist Portal</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-red: #ef4444;
+            --accent-amber: #f59e0b;
+            --primary: #3b82f6;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 2rem 1rem;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: var(--accent-red);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .search-container {
+            margin-bottom: 2.5rem;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background-color: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--accent-amber);
+            margin: 2.5rem 0 1.5rem 0;
+            padding-left: 0.5rem;
+            border-left: 4px solid var(--accent-amber);
+            text-transform: uppercase;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1xl));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: #475569;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.75rem;
+        }
+
+        .name {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--text-main);
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--accent-red);
+            border: 1px solid var(--accent-red);
+        }
+
+        .info-row {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .label {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .reason {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background-color: rgba(15, 23, 42, 0.4);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--accent-red);
+        }
+
+        .no-results {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            margin-top: 3rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Askari-10 Community Verification Portal</h1>
+        <p>Internal Security Record Log — For Residents Advisory Only</p>
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search records by Name, Mobile Number, or CNIC...">
+    </div>
+
+    <h2 class="section-title">⚠️ Blacklisted Drivers</h2>
+    <div class="grid" id="driversGrid">
+        
+        <div class="card" data-search="saleem 03000845549">
+            <div class="card-header">
+                <span class="name">Saleem</span>
+                <span class="badge">Driver</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> 0300 0845549</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Lent car to others and taught driving to people without owner's consent.</div>
+        </div>
+
+        <div class="card" data-search="muhammad jahangir siddique 35201-5572185-5">
+            <div class="card-header">
+                <span class="name">M. Jahangir Siddique</span>
+                <span class="badge">Driver</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 35201-5572185-5</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Had an accident with the car, hid it. Disappeared during child's important exam days with phone switched off; returned demanding money.</div>
+        </div>
+
+        <div class="card" data-search="muhammad nasir 36602-7226600-9 0302-6520073">
+            <div class="card-header">
+                <span class="name">Muhammad Nasir</span>
+                <span class="badge">Driver</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 36602-7226600-9</div>
+            <div class="info-row"><span class="label">Phone:</span> 0302-6520073</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Took advance salaries for Eid/wedding and vanished with phone off. Takes excessive unannounced leaves.</div>
+        </div>
+
+    </div>
+
+    <h2 class="section-title">⚠️ Blacklisted Domestic Staff / Maids</h2>
+    <div class="grid" id="maidsGrid">
+
+        <div class="card" data-search="kausar bibi allah ditta 36603-2499799-2 03044908691">
+            <div class="card-header">
+                <span class="name">Kausar Bibi</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">F/Name:</span> Allah Ditta</div>
+            <div class="info-row"><span class="label">CNIC:</span> 36603-2499799-2</div>
+            <div class="info-row"><span class="label">Mobile:</span> 03044908691</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Very rude behavior, left without notice. Stole quarter bedding, iron, and other items.</div>
+        </div>
+
+        <div class="card" data-search="faiza iftikhar fozia 3520116660154 03259423998">
+            <div class="card-header">
+                <span class="name">Faiza Iftikhar (Fozia)</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 3520116660154</div>
+            <div class="info-row"><span class="label">Mobile:</span> 0325 9423998</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Left without info. Habitual liar. Blacklisted previously in Sector A for stealing.</div>
+        </div>
+
+        <div class="card" data-search="safia shakeel 3520137887444">
+            <div class="card-header">
+                <span class="name">Safia Shakeel</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 3520137887444</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Caught stealing. Video evidence available.</div>
+        </div>
+
+        <div class="card" data-search="bibi iqbal 03098283361">
+            <div class="card-header">
+                <span class="name">Bibi Iqbal</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> 03098283361</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Left work without any advance notice. Demanded immediate payment on the same day.</div>
+        </div>
+
+        <div class="card" data-search="shazia 03241741541">
+            <div class="card-header">
+                <span class="name">Shazia</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> 03241741541</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Flagged record listed by community residents.</div>
+        </div>
+
+        <div class="card" data-search="razia 03014763215">
+            <div class="card-header">
+                <span class="name">Razia</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> 03014763215</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Walked out on previous arrangements without notice.</div>
+        </div>
+
+        <div class="card" data-search="sajida 03034328841">
+            <div class="card-header">
+                <span class="name">Sajida</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> +923034328841</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Flagged behavior logs.</div>
+        </div>
+
+        <div class="card" data-search="ainy 03220404562">
+            <div class="card-header">
+                <span class="name">Ainy</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> +92 322 0404562</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Linked with suspicious house switching groups.</div>
+        </div>
+
+        <div class="card" data-search="asia maseeh shamsa 03204085216 03204823969">
+            <div class="card-header">
+                <span class="name">Asia Maseeh</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> 0320 4085216</div>
+            <div class="info-row"><span class="label">Trainer Bhabhi:</span> Shamsa (0320 4823969)</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Theft case reported. Highly untrustworthy operators working together.</div>
+        </div>
+
+        <div class="card" data-search="sumaira masih areeba amir masih 35202-6543434-0 03278013185 35202-9988317-4">
+            <div class="card-header">
+                <span class="name">Sumaira Masih & Areeba</span>
+                <span class="badge">Maids (Family)</span>
+            </div>
+            <div class="info-row"><span class="label">Mother CNIC:</span> 35202-6543434-0 | <span class="label">Ph:</span> 0327 8013185</div>
+            <div class="info-row"><span class="label">Daughter CNIC:</span> 35202-9988317-4 (Areeba)</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Blackmailing, extreme lying, rude behavior. Constantly making fake gate passes under alternating religious identities.</div>
+        </div>
+
+        <div class="card" data-search="irshad parveen 36601-0863-095-5 03057404748">
+            <div class="card-header">
+                <span class="name">Irshad Parveen</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 36601-0863-095-5</div>
+            <div class="info-row"><span class="label">Mobile:</span> 03057404748</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Involved in sourcing narcotics/illegal drugs. Created severe domestic altercations involving outside threats.</div>
+        </div>
+
+        <div class="card" data-search="samina 03094649877">
+            <div class="card-header">
+                <span class="name">Samina</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> 03094649877</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Proven record of theft and aggressive attitude.</div>
+        </div>
+
+        <div class="card" data-search="muqadas ainy sadaf 03220404562">
+            <div class="card-header">
+                <span class="name">Muqadas</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> +92 322 0404562</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Part of an organized network of three sisters and mother executing suspicious house-switching setups.</div>
+        </div>
+
+        <div class="card" data-search="usha hina 03014825208">
+            <div class="card-header">
+                <span class="name">Usha & Hina (Daughter)</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> 03014825208</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Works in tandem with daughter to commit theft. Stole structural assets and mobile phone.</div>
+        </div>
+
+        <div class="card" data-search="kauser malish wali 03074770828">
+            <div class="card-header">
+                <span class="name">Kauser (Malish Wali)</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> 03074770828</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Severe verbal misconduct and threatening posture towards clients.</div>
+        </div>
+
+        <div class="card" data-search="sumaira 03094357281">
+            <div class="card-header">
+                <span class="name">Sumaira</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> +92 309 4357281</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Unnotified exit trends.</div>
+        </div>
+
+        <div class="card" data-search="manahil 03008048215">
+            <div class="card-header">
+                <span class="name">Manahil</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> 0300 8048215</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Accomplice in structural theft cases involving her spouse.</div>
+        </div>
+
+        <div class="card" data-search="asia">
+            <div class="card-header">
+                <span class="name">Asia (No Gate Pass)</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> 0302 5232124</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Bypassing identification parameters, unauthorized entries.</div>
+        </div>
+
+        <div class="card" data-search="najma 03079340705">
+            <div class="card-header">
+                <span class="name">Najma</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> 03079340705</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Highly aggressive, malicious gossip, financial greed.</div>
+        </div>
+
+        <div class="card" data-search="shahnaz 03042114052">
+            <div class="card-header">
+                <span class="name">Shahnaz</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> +92 304 2114052</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Absconded without warning.</div>
+        </div>
+
+        <div class="card" data-search="nasreen bibi khurram 03044748607 03304377352">
+            <div class="card-header">
+                <span class="name">Nasreen Bibi</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobiles:</span> 03044748607 / 03304377352</div>
+            <div class="info-row"><span class="label">Note:</span> Son Khurram is a guard in F1.</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Exploiting insider access networks.</div>
+        </div>
+
+        <div class="card" data-search="fakhira 03015099403">
+            <div class="card-header">
+                <span class="name">Fakhira</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> +923015099403</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Intentionally disputed standard community commercial rates.</div>
+        </div>
+
+        <div class="card" data-search="yasmeen 03244170296">
+            <div class="card-header">
+                <span class="name">Yasmeen</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> 03244170296</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Hostile, toxic behavior patterns accompanied by verbal threats when let go.</div>
+        </div>
+
+        <div class="card" data-search="ayesha 03452961840">
+            <div class="card-header">
+                <span class="name">Ayesha</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Husband Ph:</span> 03452961840</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Completely irresponsible. Remained missing for 15 days without checking in. Total liar.</div>
+        </div>
+
+        <div class="card" data-search="ruksana baji">
+            <div class="card-header">
+                <span class="name">Ruksana Baji (Middle Age)</span>
+                <span class="badge">Maid / Cook</span>
+            </div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Poses as highly innocent while subtly executing theft.</div>
+        </div>
+
+        <div class="card" data-search="safia saima 03001204514">
+            <div class="card-header">
+                <span class="name">Safia & Saima (Daughter)</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> 0300 1204514</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Extremely bad manners and verified larceny.</div>
+        </div>
+
+        <div class="card" data-search="sumaira bibi 03079428830">
+            <div class="card-header">
+                <span class="name">Sumaira Bibi</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> +92 307 9428830</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Active theft tracking record.</div>
+        </div>
+
+        <div class="card" data-search="shamim abid bareera kinza abid 03054177070 03014441450">
+            <div class="card-header">
+                <span class="name">Shamim Abid & Daughter</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mother:</span> 0305 4177070 | <span class="label">Daughter:</span> 0301 4441450</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Walked out without notice and blackmailed to organize structural labor strikes against the house.</div>
+        </div>
+
+        <div class="card" data-search="sania farooq 03230055648 03025272655">
+            <div class="card-header">
+                <span class="name">Sania</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> 03230055648</div>
+            <div class="info-row"><span class="label">Husband (Farooq - NCB F Sector):</span> 03025272655</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Negligent, highly volatile interactions.</div>
+        </div>
+
+        <div class="card" data-search="mumtaz kosar imran 352013860268-8 03054367028">
+            <div class="card-header">
+                <span class="name">Mumtaz Kosar</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 352013860268-8</div>
+            <div class="info-row"><span class="label">Mobile:</span> 03054367028</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Caught stealing, constant insubordination, and screaming inside household premises.</div>
+        </div>
+
+        <div class="card" data-search="mehnaz 03095997504 03164128803 03097876743">
+            <div class="card-header">
+                <span class="name">Mehnaz</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobiles:</span> 03095997504 / 03164128803</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Obtains emergency salary loans/advances and disappears.</div>
+        </div>
+
+        <div class="card" data-search="irum 03238868600 03217474489">
+            <div class="card-header">
+                <span class="name">Irum</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Contact:</span> 0323 8868600 / 0321 7474489</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Breach of contract protocol.</div>
+        </div>
+
+        <div class="card" data-search="farzana 03455871103">
+            <div class="card-header">
+                <span class="name">Farzana</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> 0345 5871103</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Arbitrary over-charging adjustments, blatant dishonesty.</div>
+        </div>
+
+        <div class="card" data-search="rubina abbas">
+            <div class="card-header">
+                <span class="name">Rubina Abbas</span>
+                <span class="badge">Cook / Maid</span>
+            </div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Shouts and displays high aggression when requested to maintain standard scheduled hours.</div>
+        </div>
+
+        <div class="card" data-search="kausar bibi 362032937523-6">
+            <div class="card-header">
+                <span class="name">Kausar Bibi (II)</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 362032937523-6</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Petty theft, routine unnotified week-long absences while expecting full compensation.</div>
+        </div>
+
+        <div class="card" data-search="naseem sidra 03064596446">
+            <div class="card-header">
+                <span class="name">Naseem</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Daughter (Sidra):</span> 03064596446</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Lost wardrobe inventory and refused accountability; extremely hostile communications.</div>
+        </div>
+
+        <div class="card" data-search="gulsham bibi waris maseeh chanda pinki muskan 302015400329-2 03014536283">
+            <div class="card-header">
+                <span class="name">Gulsham Bibi</span>
+                <span class="badge">Organized Gang</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 302015400329-2 | <span class="label">Ph:</span> 0301 4536283</div>
+            <div class="info-row"><span class="label">Family:</span> Waris Maseeh (Dad), Pinki, Muskan</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Part of an organized retail theft circle within sectors. Caught stealing high cash volumes weekly.</div>
+        </div>
+
+        <div class="card" data-search="ayesha 03204618688">
+            <div class="card-header">
+                <span class="name">Ayesha (II)</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> 0320 4618688</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Manipulative behavior profiling reported.</div>
+        </div>
+
+        <div class="card" data-search="kausar 03476392560">
+            <div class="card-header">
+                <span class="name">Kausar (III)</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Reference Ph:</span> 0347 6392560</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Extorts excessive monetary advances and vanishes.</div>
+        </div>
+
+        <div class="card" data-search="nasim 03477201001">
+            <div class="card-header">
+                <span class="name">Nasim (II)</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Husband Ph:</span> 0347 7201001</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Ghosted job operations for over a month with absolute communication blackout.</div>
+        </div>
+
+        <div class="card" data-search="muskaan pervaiz nazia 35201-2858583-6 03264014468">
+            <div class="card-header">
+                <span class="name">Muskaan Pervaiz</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 35201-2858583-6</div>
+            <div class="info-row"><span class="label">Mother (Nazia):</span> 03264014468</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Critical absenteeism, unresponsive communication lines.</div>
+        </div>
+
+        <div class="card" data-search="nazia 03264014468">
+            <div class="card-header">
+                <span class="name">Nazia</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> 03264014468</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Highly hostile work ethic, rejects calls, zero professional integrity.</div>
+        </div>
+
+        <div class="card" data-search="rukhsana faisal 35201-3290331-8 0320-8043231">
+            <div class="card-header">
+                <span class="name">Rukhsana Faisal</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 35201-3290331-8</div>
+            <div class="info-row"><span class="label">Mobile:</span> 0320-8043231</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Highly irregular performance cycles; left operations without alerting owners.</div>
+        </div>
+
+        <div class="card" data-search="mumtaz asghar 03415511840">
+            <div class="card-header">
+                <span class="name">Mumtaz (II)</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Husband Ph:</span> 0341 5511840</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Abandoned job twice. Demanded heavy loans, then cut off contacts. Currently roaming Sector F.</div>
+        </div>
+
+        <div class="card" data-search="rasoolan bibi 33104-8520434-9 03086646958">
+            <div class="card-header">
+                <span class="name">Rasoolan Bibi</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 33104-8520434-9</div>
+            <div class="info-row"><span class="label">Mobile:</span> 0308 6646958</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Stole domestic kitchen inventory, blackmail attempts recorded.</div>
+        </div>
+
+        <div class="card" data-search="atia 36501-1024309-8 03428162014 03477852014">
+            <div class="card-header">
+                <span class="name">Atia</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 36501-1024309-8</div>
+            <div class="info-row"><span class="label">Mobiles:</span> 03428162014 / 03477852014</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Fired for highly suspicious activities. Staged false disturbances at Gate 3 upon exit.</div>
+        </div>
+
+        <div class="card" data-search="uzma shaheen rehman 35201-5770800-6">
+            <div class="card-header">
+                <span class="name">Uzma Shaheen Rehman</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 35201-5770800-6</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Major grand theft. Escaped with gold valued at PKR 400,000 and cash advances. Still looking for work in Sector F.</div>
+        </div>
+
+        <div class="card" data-search="rehana hamid shabana kosar 03255201095">
+            <div class="card-header">
+                <span class="name">Rehana</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> 0325 5201095</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Manipulative tactic of requesting temporary free lodging to systematically steal assets over consecutive days.</div>
+        </div>
+
+        <div class="card" data-search="saira daniyaal 3540179651896 03071447859">
+            <div class="card-header">
+                <span class="name">Saira</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 3540179651896 | <span class="label">Ph:</span> 03071447859</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Constantly demanding money, grabs quick advances, and instantly vanishes.</div>
+        </div>
+
+        <div class="card" data-search="shamim 03134011783">
+            <div class="card-header">
+                <span class="name">Shamim (II)</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Cell:</span> 0313-4011783</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Weaponizes fake charity stories to manipulate residents for money before walking out.</div>
+        </div>
+
+        <div class="card" data-search="razia bibi shamim 35201-2299077-4">
+            <div class="card-header">
+                <span class="name">Razia Bibi</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 35201-2299077-4</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Sister of Shamim. Takes significant financial advance loans and skips town.</div>
+        </div>
+
+        <div class="card" data-search="parveen akhter pathani 35201-60707700">
+            <div class="card-header">
+                <span class="name">Parveen Akhter ("Pathani")</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 35201-60707700</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Verified thief, chronic liar, leaves completely after pocketing early salary structures.</div>
+        </div>
+
+        <div class="card" data-search="rano bibi rani 03058973104 35103-6040143-8">
+            <div class="card-header">
+                <span class="name">Rano Bibi (Rani)</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 35103-6040143-8 | <span class="label">Ph:</span> 0305 8973104</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Grand theft tracking history (stole structural mobile equipment, clothing, cash lines).</div>
+        </div>
+
+        <div class="card" data-search="nadia arshad 36202-0397730-0 03274677850">
+            <div class="card-header">
+                <span class="name">Nadia Arshad</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 36202-0397730-0 | <span class="label">Ph:</span> 0327-4677850</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Demands extensive luxury goods/meat provisions alongside advance cash before vanishing without explanation.</div>
+        </div>
+
+        <div class="card" data-search="sajida froudy 3804070454819-8 03437020424">
+            <div class="card-header">
+                <span class="name">Masi Sajida</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 3804070454819-8 | <span class="label">Ph:</span> 0343 7020424</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Known community fraud operator. Switches homes weekly, grabs money, switches off cell phone. Danger marker.</div>
+        </div>
+
+        <div class="card" data-search="rukhsana 03044733298 36303-2052015-4">
+            <div class="card-header">
+                <span class="name">Rukhsana Maid</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 36303-2052015-4 | <span class="label">Ph:</span> 0304 4733298</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Heavily involved in residential thefts and advance cash extraction scams.</div>
+        </div>
+
+        <div class="card" data-search="saba rashees tariq masih 3520154150438 03274041837">
+            <div class="card-header">
+                <span class="name">Saba Rashees</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 3520154150438 | <span class="label">Ph:</span> 0327 4041837</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Stole mobile devices, wardrobe items, and food reserves from family households.</div>
+        </div>
+
+        <div class="card" data-search="mehak mubarak 35201-9868490-6">
+            <div class="card-header">
+                <span class="name">Mehak Mubarak</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 35201-9868490-6</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Pickpocketed recurring cash sums directly from checking bags and visiting guest items.</div>
+        </div>
+
+        <div class="card" data-search="najma bibi shaiban 36103_8254956_0">
+            <div class="card-header">
+                <span class="name">Najma Bibi</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 36103_8254956_0 (Hometown: Khanewal)</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Stole PKR 85,000 cash, jewelry assets, and watches. Extremely hostile operator.</div>
+        </div>
+
+        <div class="card" data-search="shazia ashraf 03221017376 35202-17495978">
+            <div class="card-header">
+                <span class="name">Shazia Ashraf</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 35202-17495978 | <span class="label">Ph:</span> 03221017376</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Professional tier thief. Stole luxury items/crockery. Leverages fake emotional crying scenes when confronted to bypass searchers.</div>
+        </div>
+
+        <div class="card" data-search="ayesha 03094394079">
+            <div class="card-header">
+                <span class="name">Ayesha (III)</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> 03094394079</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Deeply abusive vocabulary used against residents; untrustworthy profile tracking.</div>
+        </div>
+
+        <div class="card" data-search="zara nadir 03493025137 03025272655">
+            <div class="card-header">
+                <span class="name">Zara & Nadir</span>
+                <span class="badge">Maid & Accomplice</span>
+            </div>
+            <div class="info-row"><span class="label">Mobile:</span> +92 349 3025137</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Husband makes placement deals, then functions as get-away wheel asset after thefts are committed.</div>
+        </div>
+
+        <div class="card" data-search="arooj fatima 38403-0187582-6">
+            <div class="card-header">
+                <span class="name">Arooj Fatima</span>
+                <span class="badge">Maid</span>
+            </div>
+            <div class="info-row"><span class="label">CNIC:</span> 38403-0187582-6</div>
+            <div class="reason"><span class="label" style="color: var(--accent-red);">Reason:</span> Multiple independent community filings validating residential robbery.</div>
+        </div>
+
+    </div>
+
+    <div class="no-results" id="noResults">❌ No matching blacklisted records found in system databases.</div>
+</div>
+
+<script>
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase().replace(/[- ]/g, '');
+        const cards = document.querySelectorAll('.card');
+        let totalVisible = 0;
+
+        cards.forEach(card => {
+            const searchData = card.getAttribute('data-search').toLowerCase().replace(/[- ]/g, '');
+            if(searchData.includes(query)) {
+                card.style.display = 'block';
+                totalVisible++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // Toggle no results view
+        const noResults = document.getElementById('noResults');
+        if(totalVisible === 0) {
+            noResults.style.display = 'block';
+        } else {
+            noResults.style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>
